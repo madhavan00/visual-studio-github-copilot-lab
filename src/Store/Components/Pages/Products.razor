@@ -1,4 +1,14 @@
-﻿@page "/products"
+﻿@* 
+Pseudocode / Plan:
+- When products is null (still loading), render a centered Bootstrap spinner using built-in classes:
+  - Use a container with d-flex, flex-column, align-items-center, and margin for spacing.
+  - Use .spinner-border (or .spinner-grow) with an accessible hidden label (.visually-hidden).
+  - Add a small caption "Loading products..." below the spinner.
+- When products is not null, keep the existing placeholder for the products table.
+- Ensure OnInitializedAsync initializes products to an empty List<Product> to avoid compile/runtime errors.
+*@
+
+@page "/products"
 @using DataEntities
 @using Store.Services
 @inject IConfiguration Configuration
@@ -13,7 +23,11 @@
 
 @if (products == null)
 {
-    <p><em>Loading...</em></p>
+    <div class="d-flex flex-column align-items-center my-5">
+        <div class="spinner-border text-primary" role="status" aria-hidden="true" style="width: 3rem; height: 3rem;"></div>
+        <span class="visually-hidden">Loading.....</span>
+        <div class="mt-2 text-muted">Loading products.....</div>
+    </div>
 }
 else
 {
@@ -31,7 +45,7 @@ else
         // Simulate asynchronous loading to demonstrate streaming rendering
         await Task.Delay(500);
         imagePrefix = Configuration["ImagePrefix"]!;
-        products = [];
+        products = new List<Product>();
     }
 
 }
